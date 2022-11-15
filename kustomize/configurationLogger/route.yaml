@@ -2,13 +2,13 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   labels:
-    app: configurationLogger
-  name: configurationLogger
+    app: configuration-logger
+  name: configuration-logger
   namespace: argocd-test
 spec:
   port:
     targetPort: 8080
   to:
     kind: Service
-    name: configurationLogger
+    name: configuration-logger
     weight: 100

@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: configurationLogger
-  name: configurationLogger
+    app: configuration-logger
+  name: configuration-logger
   namespace: argocd-test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: configurationLogger
+      app: configuration-logger
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: configurationLogger
+        app: configuration-logger
     spec:
       containers:
       - image: gitops-microservice:1.0.0-SNAPSHOT
-        name: configurationLogger
+        name: configuration-logger
         resources: {}

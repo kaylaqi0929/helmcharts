@@ -3,8 +3,8 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: configurationLogger
-  name: configurationLogger
+    app: configuration-logger
+  name: configuration-logger
   namespace: argocd-test
 spec:
   ports:
@@ -13,4 +13,4 @@ spec:
     targetPort: 8080
   type: ClusterIP
   selector:
-    app: configurationLogger
+    app: configuration-logger
