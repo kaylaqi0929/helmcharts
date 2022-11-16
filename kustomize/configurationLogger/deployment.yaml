@@ -18,6 +18,6 @@ spec:
         app: configuration-logger
     spec:
       containers:
-      - image: gitops-microservice
+      - image: gitops-microservice:1.0.0-SNAPSHOT
         name: configuration-logger
         resources: {}
