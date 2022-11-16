@@ -1,10 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  labels:
-    app: configuration-logger
+metadata:  
   name: configuration-logger
   namespace: argocd-test
+  annotations:
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"gitops-microservice:1.0.0-SNAPSHOT"},"fieldPath":"spec.template.spec.containers[?(@.name==\"configuration-logger\")].image"}]
 spec:
   replicas: 1
   selector:
