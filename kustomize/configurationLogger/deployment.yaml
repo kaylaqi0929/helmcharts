@@ -20,4 +20,30 @@ spec:
       containers:
       - image: gitops-microservice:1.0.0-SNAPSHOT
         name: configuration-logger
+        env:
+            - name: NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: gitops-microservice-build
+                  key: properties.namespace
+            - name: TRUST_CERTS
+              valueFrom:
+                configMapKeyRef:
+                  name: gitops-microservice-build
+                  key: properties.trust-certs
+            - name: DATA
+              valueFrom:
+                configMapKeyRef:
+                  name: gitops-microservice-build
+                  key: all
+            - name: LOGIN_URL
+              valueFrom:
+                secretKeyRef:
+                  name: oc-login-credentials
+                  key: master-url
+            - name: LOGIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: oc-login-credentials
+                  key: token
         resources: {}
