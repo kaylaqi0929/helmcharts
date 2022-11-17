@@ -1,0 +1,5 @@
+namespace: postgres
+resources:
+- postgres-svc.yaml
+- postgres-deployment.yaml
+- postgres-route.yaml
