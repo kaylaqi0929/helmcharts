@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bgd-subchart
+  name: bgd-subchart
+  namespace: bgd-subchart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bgd-subchart
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: bgd-subchart
+    spec:
+      containers:
+      - image: quay.io/rhdevelopers/bgd:1.0.0
+        name: bgd
+        env:
+        - name: COLOR
+          value: "blue"
+        resources: {}
+---
