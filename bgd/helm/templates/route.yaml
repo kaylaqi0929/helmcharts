@@ -4,7 +4,7 @@ metadata:
   labels:
     app: bgd-subchart
   name: bgd-subchart
-  namespace: bgd-subchart
+  namespace: gitops-helm
 spec:
   port:
     targetPort: 8080

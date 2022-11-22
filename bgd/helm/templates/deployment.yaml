@@ -5,7 +5,7 @@ metadata:
   labels:
     app: bgd-subchart
   name: bgd-subchart
-  namespace: gitops-kustomize
+  namespace: gitops-helm
 spec:
   replicas: 1
   selector:

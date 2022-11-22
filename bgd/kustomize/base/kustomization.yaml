@@ -1,4 +1,4 @@
-namespace: bgd
+namespace: gitops-kustomize
 resources:
 - bgd-svc.yaml
 - bgd-deployment.yaml
