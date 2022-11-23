@@ -7,6 +7,10 @@ postgres:
     port: 5432
     environment:
       POSTGRES_PASSWORD: test
+      PGUSER: test
+      PGHOST: postgres
+      PGDATABASE: postgres
+      PGPASSWORD: test
   service:
     type: ClusterIP
     port: 5432
