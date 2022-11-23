@@ -5,6 +5,8 @@ postgres:
   container:
     image: postgres:9.6-alpine
     port: 5432
+    environment:
+      POSTGRES_PASSWORD: test
   service:
     type: ClusterIP
     port: 5432
