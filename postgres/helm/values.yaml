@@ -26,3 +26,6 @@ postgres:
         value: test
       - key: POSTGRES_PASSWORD
         value: test
+serviceAccount:
+  enabled: true
+  name: postgres-gitops-helm-deployment-admin
