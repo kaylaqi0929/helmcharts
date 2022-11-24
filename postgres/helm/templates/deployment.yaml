@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.postgres.name }}
-  namespace: gitops-helm
+  namespace: {{ .Values.postgres.namespace }}
   labels:
     app: {{ .Values.postgres.name }}
     group: {{ .Values.postgres.group }}
