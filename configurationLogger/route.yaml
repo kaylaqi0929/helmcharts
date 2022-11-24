@@ -2,7 +2,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: configuration-logger
-  namespace: argocd-test
+  namespace: gitops-kustomize
 spec:
   port:
     targetPort: 8080
