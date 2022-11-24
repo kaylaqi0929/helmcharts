@@ -5,13 +5,6 @@ postgres:
   container:
     image: postgres:9.6-alpine
     port: 5432
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_PASSWORD: test
-      PGUSER: test
-      PGHOST: postgres
-      PGDATABASE: postgres
-      PGPASSWORD: test
   service:
     type: ClusterIP
     port: 5432
@@ -26,5 +19,9 @@ postgres:
   config:
     name: postgres-config
     data:
-       - key: key
-         value: value
+      - key: POSTGRES_DB
+        value: test
+      - key: POSTGRES_USER
+        value: test
+      - key: POSTGRES_PASSWORD
+        value: test
