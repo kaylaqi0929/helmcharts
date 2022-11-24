@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:  
   name: configuration-logger
-  namespace: argocd-test
+  namespace: gitops-kustomize
   annotations:
     image.openshift.io/triggers: |-
       [{"from":{"kind":"ImageStreamTag","name":"gitops-microservice:1.0.0-SNAPSHOT"},"fieldPath":"spec.template.spec.containers[?(@.name==\"configuration-logger\")].image"}]
@@ -22,29 +22,14 @@ spec:
       - image: gitops-microservice:1.0.0-SNAPSHOT
         name: configuration-logger
         env:
-            - name: NAMESPACE
-              valueFrom:
-                configMapKeyRef:
-                  name: gitops-microservice-build
-                  key: properties.namespace
-            - name: TRUST_CERTS
-              valueFrom:
-                configMapKeyRef:
-                  name: gitops-microservice-build
-                  key: properties.trust-certs
             - name: DATA
               valueFrom:
                 configMapKeyRef:
                   name: gitops-microservice-build
                   key: all
-            - name: LOGIN_URL
+            - name: POCNAME
               valueFrom:
-                secretKeyRef:
-                  name: oc-login-credentials
-                  key: master-url
-            - name: LOGIN_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: oc-login-credentials
-                  key: token
+                configMapKeyRef:
+                  name: gitops-microservice-build
+                  key: poc.name
         resources: {}
