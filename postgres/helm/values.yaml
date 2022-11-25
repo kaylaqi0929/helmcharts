@@ -4,7 +4,7 @@ postgres:
   namespace: gitops-helm
   group: db
   container:
-    image: postgres:9.6-alpine
+    image: postgres:15.1-alpine
     port: 5432
   service:
     type: ClusterIP
