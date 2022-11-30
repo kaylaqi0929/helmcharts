@@ -3,7 +3,7 @@ serviceAccount:
   enabled: true
   name: postgres-gitops-helm-deployment-admin
 postgres:
-  name: postgres
+  name: helm-postgres
   namespace: gitops-helm
   group: db
   container:
@@ -13,15 +13,15 @@ postgres:
     type: ClusterIP
     port: 5432
   volume:
-    name: third-postgres-storage
+    name: helm-postgres-storage
     kind: PersistentVolumeClaim
     mountPath: /var/lib/postgresql/data
     pvc:
-      name: third-postgres-persistent-volume-claim
+      name: helm-postgres-persistent-volume-claim
       accessMode: ReadWriteOnce
       storage: 4Gi
   config:
-    name: third-postgres-config
+    name: helm-postgres-config
     data:
       - key: POSTGRES_DB
         value: test
