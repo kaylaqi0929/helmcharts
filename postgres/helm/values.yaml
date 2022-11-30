@@ -1,4 +1,7 @@
 replicaCount: 1
+serviceAccount:
+  enabled: true
+  name: postgres-gitops-helm-deployment-admin
 postgres:
   name: postgres
   namespace: gitops-helm
@@ -10,15 +13,15 @@ postgres:
     type: ClusterIP
     port: 5432
   volume:
-    name: postgres-storage
+    name: third-postgres-storage
     kind: PersistentVolumeClaim
     mountPath: /var/lib/postgresql/data
     pvc:
-      name: postgres-persistent-volume-claim
+      name: third-postgres-persistent-volume-claim
       accessMode: ReadWriteOnce
       storage: 4Gi
   config:
-    name: postgres-config
+    name: third-postgres-config
     data:
       - key: POSTGRES_DB
         value: test
@@ -26,6 +29,3 @@ postgres:
         value: test
       - key: POSTGRES_PASSWORD
         value: test
-serviceAccount:
-  enabled: true
-  name: postgres-gitops-helm-deployment-admin
