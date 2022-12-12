@@ -18,8 +18,10 @@ spec:
       labels:
         app: configuration-logger
     spec:
+      imagePullSecrets:
+      - name: artifactory
       containers:
-      - image: gitops-microservice:1.0.0-SNAPSHOT
+      - image: artifactory-artifactory-nginx-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io:80/gitops-local/gitops-microservice:1.0.0-SNAPSHOT
         name: configuration-logger
         env:
             - name: DATA
