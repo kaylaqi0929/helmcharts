@@ -26,12 +26,12 @@ spec:
         env:
             - name: DATA
               valueFrom:
-                configMapKeyRef:
+                configMap:
                   name: gitops-microservice-build
                   key: json-test
             - name: POCNAME
               valueFrom:
-                configMapKeyRef:
+                configMap:
                   name: gitops-microservice-build
                   key: poc.name
         resources: {}
