@@ -10,3 +10,17 @@ resources:
 - deployment.yaml
 - route.yaml
 - service.yaml
+
+# Creates a config map
+configMapGenerator:
+- name: gitops-microservice-build
+  literals:
+  - FOO=Bar
+  - poc.name=GitOps
+  - properties.build=true
+  - properties.deploy=false
+  - properties.expose=false
+  - properties.namespace=gitlab-kustomize
+  - properties.trust-certs=true
+  - json-test.properties.build=true
+  - json-test.properties.deploy=true
