@@ -3,9 +3,9 @@ kind: Deployment
 metadata:  
   name: configuration-logger
   namespace: gitops-kustomize
-  annotations:
-    image.openshift.io/triggers: |-
-      [{"from":{"kind":"ImageStreamTag","name":"gitops-microservice:1.0.0-SNAPSHOT"},"fieldPath":"spec.template.spec.containers[?(@.name==\"configuration-logger\")].image"}]
+  # annotations:
+  #   image.openshift.io/triggers: |-
+  #     [{"from":{"kind":"ImageStreamTag","name":"gitops-microservice:1.0.0-SNAPSHOT"},"fieldPath":"spec.template.spec.containers[?(@.name==\"configuration-logger\")].image"}]
 spec:
   replicas: 1
   selector:
@@ -22,7 +22,7 @@ spec:
       - name: artifactory
       - name: default-dockercfg-nm2xc
       containers:
-      - image: artifactory-artifactory-nginx-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io:80/gitops-local/gitops-microservice:argocd-latest-4
+      - image: artifactory-artifactory-nginx-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io:80/gitops-local/gitops-micro:latest
         name: configuration-logger
         env:
             - name: DATA
