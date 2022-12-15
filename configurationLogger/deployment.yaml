@@ -22,7 +22,7 @@ spec:
       - name: artifactory
       - name: default-dockercfg-nm2xc
       containers:
-      - image: artifactory-artifactory-nginx-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io:80/gitops-local/gitops-microservice:argocd-test
+      - image: artifactory-artifactory-nginx-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io:80/gitops-local/gitops-microservice:argocd-latest
         name: configuration-logger
         env:
             - name: DATA
