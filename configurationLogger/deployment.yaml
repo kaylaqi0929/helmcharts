@@ -20,7 +20,7 @@ spec:
     spec:
       imagePullSecrets:
       - name: artifactory
-      - name: default-dockercfg-nm2xc
+      # - name: default-dockercfg-nm2xc
       containers:
       - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/gitops-micro:latest
         name: configuration-logger
