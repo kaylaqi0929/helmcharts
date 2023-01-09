@@ -1,0 +1,5 @@
+properties.build:true
+properties.deploy:true
+properties.expose:true
+properties.namespace:argocd-test
+properties.trust-certs:true

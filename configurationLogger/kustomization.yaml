@@ -15,6 +15,8 @@ resources:
 # Creates a config map
 configMapGenerator:
 - name: gitops-microservice-build
+  files:
+  - json-test
   literals:
   - FOO=Bar
   - poc.name=GitOps
