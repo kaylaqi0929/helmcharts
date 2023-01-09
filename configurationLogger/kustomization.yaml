@@ -11,7 +11,12 @@ resources:
 - deployment.yaml
 - route.yaml
 - service.yaml
-
+# Create artifactory pull secret
+secretGenerator:
+  - name: artifactory-secret
+    files:
+      - .dockerconfigjson
+    type: kubernetes.io/dockerconfigjson
 # Creates a config map
 configMapGenerator:
 - name: gitops-microservice-build
