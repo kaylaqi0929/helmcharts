@@ -1537,7 +1537,7 @@ mc:
 
 # Nginx
 nginx:
-  enabled: true
+  enabled: false
   kind: Deployment
   name: nginx
   labels: {}
