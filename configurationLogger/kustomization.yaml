@@ -18,7 +18,6 @@ configMapGenerator:
   files:
   - json-test
   literals:
-  - FOO=Bar
   - poc.name=GitOps
   - properties.build=true
   - properties.deploy=false
