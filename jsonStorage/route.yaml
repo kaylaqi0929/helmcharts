@@ -10,6 +10,6 @@ spec:
     termination: edge
   to:
     kind: ""
-    name: event-broker-source
+    name: json-storage
     weight: null
 status: {}
