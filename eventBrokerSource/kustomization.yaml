@@ -21,6 +21,6 @@ secretGenerator:
 configMapGenerator:
 - name: solace-config
   literals:
-  - host=pubsubplus-openshift-pubsubplus-openshift-dev.solace-system.svc.cluster.local
+  - host=pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
   - username=test
   - topic=test/topic
