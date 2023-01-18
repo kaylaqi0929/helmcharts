@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: json-storage
+  name: json-storage
+  namespace: gitops-kustomize
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: json-storage
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: json-storage
+    spec:
+      imagePullSecrets:
+      - name: artifactory-secret
+      containers:
+      - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/json-storage:latest
+        name: json-storage
+        env:
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-secret
+                  key: user
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-secret
+                  key: password
+            - name: NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-secret
+                  key: NAME
+            - name: TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configmap
+                  key: type
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configmap
+                  key: host
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configmap
+                  key: port
+        resources: {}
+status: {}
