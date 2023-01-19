@@ -9,6 +9,6 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: apps/
-    repoURL: 'https://github.com/danialasghar/GitOps-PoC.git'
+    repoURL: 'https://github.com/danialasghar/GitOps-PoC'
     targetRevision: main
   project: default
