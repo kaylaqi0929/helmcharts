@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: event-broker-service
-  namespace: gitops-kustomize
+  name: event-broker-source
 spec:
   destination:
+    name: ''
     namespace: gitops-kustomize
-    server: https://kubernetes.default.svc 
-  project: default 
-  source: 
-    path: event-broker-source
-    repoURL: https://github.com/danialasghar/GitOps-PoC.git
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: eventBrokerSource
+    repoURL: 'https://github.com/danialasghar/GitOps-PoC.git'
     targetRevision: main
+  project: default
