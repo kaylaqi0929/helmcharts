@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: json-storage
+  namespace: gitops-kustomize
+spec:
+  destination:
+    namespace: gitops-kustomize
+    server: https://kubernetes.default.svc 
+  project: default 
+  source: 
+    path: jsonStorage
+    repoURL: https://github.com/danialasghar/GitOps-PoC.git
+    targetRevision: main
