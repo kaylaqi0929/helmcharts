@@ -14,7 +14,6 @@ spec:
     targetPort: 8080
   selector:
     app: event-broker-sink
-    deploymentconfig: event-broker-sink
   type: ClusterIP
 status:
   loadBalancer: {}
