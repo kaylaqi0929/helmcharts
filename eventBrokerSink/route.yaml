@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  name: event-broker-sink
+  namespace: gitops-kustomize
+  labels:
+    app: event-broker-sink
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  to:
+    kind: ""
+    name: event-broker-sink
+    weight: null
+status: {}
+
