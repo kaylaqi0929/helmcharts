@@ -1,0 +1,13 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: artifactory-deployment-admin-anyuid
+  namespace: testhelm
+subjects:
+  - kind: ServiceAccount
+    name: artifactory-deployment-admin
+    namespace: testhelm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'system:openshift:scc:anyuid'
