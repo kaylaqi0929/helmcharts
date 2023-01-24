@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: event-broker-source
+  name: event-broker-source
+  namespace: gitops-kustomize
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-broker-source
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: event-broker-source
+    spec:
+      imagePullSecrets:
+      - name: artifactory-secret
+      containers:
+      - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/event-broker-source:latest
+        name: event-broker-source
+        env:
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: host
+            - name: USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: username
+            - name: TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: topic
+        resources: {}
+status: {}

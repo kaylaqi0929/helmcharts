@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: gitops-kustomize
+bases:
+- ./eventBrokerSource
+- ./jsonStorage
+- ./eventBrokerSink
+# Create artifactory pull secret
+secretGenerator:
+  - name: artifactory-secret
+    files:
+      - .dockerconfigjson
+    type: kubernetes.io/dockerconfigjson
+configMapGenerator:
+- name: solace-config
+  literals:
+  - host=pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
+  - username=test
+  - topic=test/topic

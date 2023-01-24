@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: json-storage
+  name: json-storage
+  namespace: gitops-kustomize
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: json-storage
+  type: ClusterIP
+status:
+  loadBalancer: {}
