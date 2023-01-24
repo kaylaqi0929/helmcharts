@@ -1,0 +1,14 @@
+artifactory:
+  masterKeySecretName: my-masterkey-secret
+  joinKeySecretName: my-joinkey-secret
+ 
+serviceAccount:
+  name: artifactory-deployment-admin
+ 
+nginx:
+  enabled: false
+ 
+postgresql:
+  serviceAccount:
+    enabled: true
+    name: artifactory-deployment-admin
