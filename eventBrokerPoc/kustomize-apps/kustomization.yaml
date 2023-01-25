@@ -17,3 +17,10 @@ configMapGenerator:
   - host=pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
   - username=test
   - topic=test/topic
+
+helmChartInflationGenerator:
+- chartName: pubsubplus-openshift-dev
+  chartRepoUrl: https://artifacthub.io/packages/helm/openshift/pubsubplus-openshift-dev
+  chartVersion: 3.1.0
+  # override with these custom values
+  # values: ./values-aro.yaml

@@ -38,26 +38,31 @@ spec:
           imagePullPolicy: IfNotPresent
 
           env:
-            - name: POSTGRES_ADMIN
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin
-                  key: POSTGRES_ADMIN          
+            # - name: POSTGRES_ADMIN
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: postgres-admin
+            #       key: POSTGRES_ADMIN          
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres-admin
+                  name: postgres-creds
                   key: POSTGRES_PASSWORD
-            - name: POSTGRES_GENERAL_USERNAME
+            - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres-user
-                  key: POSTGRES_GENERAL_USERNAME
-            - name: POSTGRES_GENERAL_PASSWORD
+                  name: postgres-creds
+                  key: POSTGRES_USER
+            - name: POSTGRES_DB
               valueFrom:
-                secretKeyRef:
-                  name: postgres-user
-                  key: POSTGRES_GENERAL_PASSWORD
+                configMapKeyRef:
+                  name: postgres-server
+                  key: POSTGRES_DB
+            # - name: POSTGRES_GENERAL_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: postgres-user
+            #       key: POSTGRES_GENERAL_PASSWORD
 
 #          command:
 #          - /bin/sh
@@ -110,7 +115,7 @@ spec:
         - name: init
           configMap:
             name: postgres-init
-            defaultMode: 0755
+            # defaultMode: 0755
 
   volumeClaimTemplates:
     - metadata:

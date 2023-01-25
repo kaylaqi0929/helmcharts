@@ -13,43 +13,43 @@ configMapGenerator:
         app.kubernetes.io/name: postgres
         app.kubernetes.io/component: server 
     files:
-      - configs/user.sh
+      - configs/init.sql
   - name: postgres-server
     options:
       labels:
         app.kubernetes.io/name: postgres
         app.kubernetes.io/component: server
     literals:
-      - POSTGRES_DB=postgres
-      - POSTGRES_GENERAL_DATABASE=postgresdb
+      - POSTGRES_DB=eventdb
+      # - POSTGRES_GENERAL_DATABASE=postgresdb
 #      - POSTGRES_ADMIN=postgres
 #      - POSTGRES_PASSWORD=admin
 #      - POSTGRES_GENERAL_USERNAME=kaylaa
 #      - POSTGRES_GENERAL_PASSWORD=passwd
 
 secretGenerator:
-  - name: postgres-user
+  - name: postgres-creds
     options:
       disableNameSuffixHash: true
       labels:
         app.kubernetes.io/name: postgres
         app.kubernetes.io/component: server
-#    literals: 
-#    - POSTGRES_GENERAL_USERNAME=Kayla
-#    - POSTGRES_GENERAL_PASSWORD=passwd
-    envs: 
-      - user.env
-  - name: postgres-admin
-    options:
-      disableNameSuffixHash: true
-      labels:
-        app.kubernetes.io/name: postgres
-        app.kubernetes.io/component: server
-#    literals:
-#    - POSTGRES_ADMIN=admin
-#    - POSTGRES_PASSWORD=admin
-    envs: 
-      - admin.env
+    literals: 
+    - POSTGRES_USER=yuriy
+    - POSTGRES_PASSWORD=1234
+  #   envs: 
+  #     - user.env
+  # - name: postgres-admin
+  #   options:
+  #     disableNameSuffixHash: true
+  #     labels:
+  #       app.kubernetes.io/name: postgres
+  #       app.kubernetes.io/component: server
+  #  literals:
+  #  - POSTGRES_ADMIN=admin
+  #  - POSTGRES_PASSWORD=admin
+  #   envs: 
+  #     - admin.env
 
 images:
   - name: postgres-server

@@ -1,0 +1,797 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubsubplus-openshift-dev
+    helm.sh/chart: pubsubplus-openshift-dev-3.1.0
+  name: release-name-pubsubplus-openshift-dev-sa
+  namespace: gitops-kustomize
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: release-name-pubsubplus-openshift-dev-podtagupdater
+  namespace: gitops-kustomize
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: release-name-pubsubplus-openshift-dev-serviceaccounts-to-podtagupdater
+  namespace: gitops-kustomize
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: release-name-pubsubplus-openshift-dev-podtagupdater
+subjects:
+- kind: ServiceAccount
+  name: release-name-pubsubplus-openshift-dev-sa
+  namespace: gitops-kustomize
+---
+apiVersion: v1
+data:
+  host: postgres-server
+  port: "5432"
+  type: jdbc:postgresql
+kind: ConfigMap
+metadata:
+  name: db-configmap-224ccm95kc
+  namespace: gitops-kustomize
+---
+apiVersion: v1
+data:
+  init.sh: |-
+    export username_admin_passwordfilepath="/mnt/disks/secrets/username_admin_password"
+    export username_admin_globalaccesslevel=admin
+    export service_ssh_port='2222'
+    export service_webtransport_port='8008'
+    export service_webtransport_tlsport='1443'
+    export service_semp_tlsport='1943'
+    export logging_debug_output=all
+    export system_scaling_maxconnectioncount="100"
+  readiness_check.sh: |-
+    #!/bin/bash
+    APP=`basename "$0"`
+    LOG_FILE=/usr/sw/var/k8s_readiness_check.log # STDOUT/STDERR goes to k8s event logs but gets cleaned out eventually. This will also persist it.
+    tail -n 1000 ${LOG_FILE} > ${LOG_FILE}.tmp; mv -f ${LOG_FILE}.tmp ${LOG_FILE} || :  # Limit logs size
+    exec > >(tee -a ${LOG_FILE}) 2>&1 # Setup logging
+    FINAL_ACTIVITY_LOGGED_TRACKING_FILE=/tmp/final_activity_state_logged
+
+    # Function to read Kubernetes metadata labels
+    get_label () {
+      # Params: $1 label name
+      echo $(cat /etc/podinfo/labels | awk -F= '$1=="'${1}'"{print $2}' | xargs);
+    }
+
+    # Function to set Kubernetes metadata labels
+    set_label () {
+      # Params: $1 label name, $2 label set value
+      #Prevent overdriving Kubernetes infra, don't set activity state to same as previous state
+      previous_state=$(get_label "active")
+      if [ "${2}" = "${previous_state}" ]; then
+        #echo "`date` INFO: ${APP}-Current and Previous state match (${2}), not updating pod label"
+        :
+      else
+        echo "`date` INFO: ${APP}-Updating pod label using K8s API from ${previous_state} to ${2}"
+        echo "[{\"op\": \"add\", \"path\": \"/metadata/labels/${1}\", \"value\": \"${2}\" }]" > /tmp/patch_label.json
+        K8S=https://kubernetes.default.svc.cluster.local:$KUBERNETES_SERVICE_PORT
+        KUBE_TOKEN=$(</var/run/secrets/kubernetes.io/serviceaccount/token)
+        CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        NAMESPACE=$(</var/run/secrets/kubernetes.io/serviceaccount/namespace)
+        if ! curl -sS --output /dev/null --cacert $CACERT --connect-timeout 5 \
+            --request PATCH --data "$(cat /tmp/patch_label.json)" \
+            -H "Authorization: Bearer $KUBE_TOKEN" -H "Content-Type:application/json-patch+json" \
+            $K8S/api/v1/namespaces/$NAMESPACE/pods/$HOSTNAME ; then
+          # Label update didn't work this way, fall back to alternative legacy method to update label
+          if ! curl -sSk --output /dev/null -H "Authorization: Bearer $KUBE_TOKEN" --request PATCH --data "$(cat /tmp/patch_label.json)" \
+            -H "Content-Type:application/json-patch+json" \
+            https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/api/v1/namespaces/$STATEFULSET_NAMESPACE/pods/$HOSTNAME ; then
+            echo "`date` ERROR: ${APP}-Unable to update pod label, check access from pod to K8s API or RBAC authorization" >&2
+            rm -f ${FINAL_ACTIVITY_LOGGED_TRACKING_FILE}; exit 1
+          fi
+        fi
+      fi
+    }
+
+    # Main logic: note that there are no re-tries here, if check fails then return not ready.
+    # nonHA config
+    health_result=`curl -s -o /dev/null -w "%{http_code}"  http://localhost:5550/health-check/guaranteed-active`
+    case "${health_result}" in
+      "200")
+        if [ ! -f ${FINAL_ACTIVITY_LOGGED_TRACKING_FILE} ]; then
+          echo "`date` INFO: ${APP}-nonHA Event Broker health check reported 200, message spool is up"
+          touch ${FINAL_ACTIVITY_LOGGED_TRACKING_FILE}
+        fi
+        set_label "active" "true"
+        exit 0
+        ;;
+      "503")
+        if [[ $(get_label "active") = "true" ]]; then echo "`date` INFO: ${APP}-nonHA Event Broker health check reported 503, message spool is down"; fi
+        set_label "active" "false"
+        # Fail readiness check
+        rm -f ${FINAL_ACTIVITY_LOGGED_TRACKING_FILE}; exit 1
+        ;;
+      *)
+        echo "`date` WARN: ${APP}-nonHA Event Broker health check reported ${health_result}"
+        set_label "active" "false"
+        # Fail readiness check
+        rm -f ${FINAL_ACTIVITY_LOGGED_TRACKING_FILE}; exit 1
+    esac
+  semp_query.sh: "#!/bin/bash\nAPP=`basename \"$0\"`\nOPTIND=1         # Reset in
+    case getopts has been used previously in the shell.\n# Initialize our own variables:\ncount_search=\"\"\nname=\"\"\npassword=\"\"\nquery=\"\"\nurl=\"\"\nvalue_search=\"\"\ntest_connection_only=false\nscript_name=$0\nverbose=0\nwhile
+    getopts \"c:n:p:q:u:v:t\" opt; do\n    case \"$opt\" in\n    c)  count_search=$OPTARG\n
+    \       ;;\n    n)  username=$OPTARG\n        ;;\n    p)  password=$OPTARG\n        ;;\n
+    \   q)  query=$OPTARG\n        ;;\n    u)  url=$OPTARG\n        ;;\n    v)  value_search=$OPTARG\n
+    \       ;;\n    t)  test_connection_only=true\n        ;;\n    esac\ndone\nshift
+    $((OPTIND-1))\n[ \"$1\" = \"--\" ] && shift\nverbose=1\n#echo \"`date` INFO: ${APP}-${script_name}:
+    count_search=${count_search} ,username=${username} ,password=xxx query=${query}
+    \\\n#            ,url=${url} ,value_search=${value_search} ,Leftovers: $@\" >&2\nif
+    [[ ${url} = \"\" || ${username} = \"\" || ${password} = \"\" ]]; then\n  echo
+    \"`date` ERROR: ${APP}-${script_name}: url, username, password are madatory fields\"
+    >&2\n  echo  '<returnInfo><errorInfo>missing parameter</errorInfo></returnInfo>'\n
+    \ exit 1\nfi\nif [ \"`curl --write-out '%{http_code}' --silent --output /dev/null
+    -u ${username}:${password} ${url}/SEMP`\" != \"200\" ] ; then\n  echo  \"<returnInfo><errorInfo>management
+    host is not responding</errorInfo></returnInfo>\"\n  exit 1\nfi\nif [ \"$test_connection_only\"
+    = true ] ; then\n  exit 0      # done here, connection is up\nfi\nquery_response=`curl
+    -sS -u ${username}:${password} ${url}/SEMP -d \"${query}\"`\n# Validate first
+    char of response is \"<\", otherwise no hope of being valid xml\nif [[ ${query_response:0:1}
+    != \"<\" ]] ; then \n  echo  \"<returnInfo><errorInfo>no valid xml returned</errorInfo></returnInfo>\"\n
+    \ exit 1\nfi\nquery_response_code=`echo $query_response | xmllint -xpath 'string(/rpc-reply/execute-result/@code)'
+    -`\n\nif [[ -z ${query_response_code} && ${query_response_code} != \"ok\" ]];
+    then\n    echo  \"<returnInfo><errorInfo>query failed -${query_response_code}-</errorInfo></returnInfo>\"\n
+    \   exit 1\nfi\n#echo \"`date` INFO: ${APP}-${script_name}: query passed ${query_response_code}\"
+    >&2\nif [[ ! -z $value_search ]]; then\n    value_result=`echo $query_response
+    | xmllint -xpath \"string($value_search)\" -`\n    echo  \"<returnInfo><errorInfo></errorInfo><valueSearchResult>${value_result}</valueSearchResult></returnInfo>\"\n
+    \   exit 0\nfi\nif [[ ! -z $count_search ]]; then\n    count_line=`echo $query_response
+    | xmllint -xpath \"$count_search\" -`\n    count_string=`echo $count_search |
+    cut -d '\"' -f 2`\n    count_result=`echo ${count_line} | tr \"><\" \"\\n\" |
+    grep -c ${count_string}`\n    echo  \"<returnInfo><errorInfo></errorInfo><countSearchResult>${count_result}</countSearchResult></returnInfo>\"\n
+    \   exit 0\nfi"
+  startup-broker.sh: "#!/bin/bash\nAPP=`basename \"$0\"`\nIFS='-' read -ra host_array
+    <<< $(hostname)\nnode_ordinal=${host_array[-1]}\necho \"`date` INFO: ${APP}-Node
+    ordinal: ${node_ordinal}\"\necho \"`date` INFO: ${APP}-Waiting for management
+    API to become available\"\npassword=`cat /mnt/disks/secrets/username_admin_password`\nloop_guard=60\npause=10\ncount=0\nwhile
+    [ ${count} -lt ${loop_guard} ]; do \n  if /mnt/disks/solace/semp_query.sh -n admin
+    -p ${password} -u http://localhost:8080 -t ; then\n    break\n  fi\n  run_time=$((${count}
+    * ${pause}))\n  ((count++))\n  echo \"`date` INFO: ${APP}-Waited ${run_time} seconds,
+    Management API not yet accessible\"\n  sleep ${pause}\ndone\nif [ ${count} -eq
+    ${loop_guard} ]; then\n  echo \"`date` ERROR: ${APP}-Solace Management API never
+    came up\"  >&2\n  exit 1 \nfi\necho \"`date` INFO: ${APP}-PubSub+ Event Broker
+    bringup is complete for this node.\"\nexit 0"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubsubplus-openshift-dev
+    helm.sh/chart: pubsubplus-openshift-dev-3.1.0
+  name: release-name-pubsubplus-openshift-dev
+  namespace: gitops-kustomize
+---
+apiVersion: v1
+data:
+  host: pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
+  topic: test/topic
+  username: test
+kind: ConfigMap
+metadata:
+  name: solace-config-fg9htft922
+  namespace: gitops-kustomize
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: |
+    ew0KICAgICJhdXRocyI6ew0KICAgICAgICAiYXJ0aWZhY3RvcnktYXJ0aWZhY3RvcnkuYX
+    Bwcy54bmtwZXl4MC5jYW5hZGFjZW50cmFsLmFyb2FwcC5pbyI6ew0KICAgICAgICAgICAg
+    InVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6IkFkbWluMTIzISIsImF1dGgiOiJZV1
+    J0YVc0NlFXUnRhVzR4TWpNaCIsImVtYWlsIjoiIg0KICAgICAgICAgICAgICAgIH0NCiAg
+    ICAgICAgICAgIH0NCn0=
+kind: Secret
+metadata:
+  name: artifactory-secret-6t24dbtd2h
+  namespace: gitops-kustomize
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+data:
+  name: ZXZlbnRkYg==
+  password: MTIzNA==
+  user: eXVyaXk=
+kind: Secret
+metadata:
+  name: db-config-secret-9mttb5gth7
+  namespace: gitops-kustomize
+type: Opaque
+---
+apiVersion: v1
+data:
+  username_admin_password: Vk9hWXBMS1VYdA==
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubsubplus-openshift-dev
+    helm.sh/chart: pubsubplus-openshift-dev-3.1.0
+  name: release-name-pubsubplus-openshift-dev-secrets
+  namespace: gitops-kustomize
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: event-broker-sink
+  name: event-broker-sink
+  namespace: gitops-kustomize
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: event-broker-sink
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: event-broker-source
+  name: event-broker-source
+  namespace: gitops-kustomize
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: event-broker-source
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: json-storage
+  name: json-storage
+  namespace: gitops-kustomize
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: json-storage
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubsubplus-openshift-dev
+    helm.sh/chart: pubsubplus-openshift-dev-3.1.0
+  name: release-name-pubsubplus-openshift-dev
+  namespace: gitops-kustomize
+spec:
+  ports:
+  - name: tcp-ssh
+    port: 2222
+    protocol: TCP
+    targetPort: 2222
+  - name: tcp-semp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: tls-semp
+    port: 1943
+    protocol: TCP
+    targetPort: 1943
+  - name: tcp-smf
+    port: 55555
+    protocol: TCP
+    targetPort: 55555
+  - name: tcp-smfcomp
+    port: 55003
+    protocol: TCP
+    targetPort: 55003
+  - name: tls-smf
+    port: 55443
+    protocol: TCP
+    targetPort: 55443
+  - name: tcp-smfroute
+    port: 55556
+    protocol: TCP
+    targetPort: 55556
+  - name: tcp-web
+    port: 8008
+    protocol: TCP
+    targetPort: 8008
+  - name: tls-web
+    port: 1443
+    protocol: TCP
+    targetPort: 1443
+  - name: tcp-rest
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  - name: tls-rest
+    port: 9443
+    protocol: TCP
+    targetPort: 9443
+  - name: tcp-amqp
+    port: 5672
+    protocol: TCP
+    targetPort: 5672
+  - name: tls-amqp
+    port: 5671
+    protocol: TCP
+    targetPort: 5671
+  - name: tcp-mqtt
+    port: 1883
+    protocol: TCP
+    targetPort: 1883
+  - name: tls-mqtt
+    port: 8883
+    protocol: TCP
+    targetPort: 8883
+  - name: tcp-mqttweb
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  - name: tls-mqttweb
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    active: "true"
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/name: pubsubplus-openshift-dev
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: event-broker-sink
+  name: event-broker-sink
+  namespace: gitops-kustomize
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-broker-sink
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: event-broker-sink
+    spec:
+      containers:
+      - env:
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              key: host
+              name: solace-config-fg9htft922
+        - name: USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: username
+              name: solace-config-fg9htft922
+        - name: TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: topic
+              name: solace-config-fg9htft922
+        image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/eventbrokersink:latest
+        name: event-broker-sink
+        resources: {}
+      imagePullSecrets:
+      - name: artifactory-secret-6t24dbtd2h
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: event-broker-source
+  name: event-broker-source
+  namespace: gitops-kustomize
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-broker-source
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: event-broker-source
+    spec:
+      containers:
+      - env:
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              key: host
+              name: solace-config-fg9htft922
+        - name: USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: username
+              name: solace-config-fg9htft922
+        - name: TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: topic
+              name: solace-config-fg9htft922
+        image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/event-broker-source:latest
+        name: event-broker-source
+        resources: {}
+      imagePullSecrets:
+      - name: artifactory-secret-6t24dbtd2h
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: json-storage
+  name: json-storage
+  namespace: gitops-kustomize
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: json-storage
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: json-storage
+    spec:
+      containers:
+      - env:
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              key: user
+              name: db-config-secret-9mttb5gth7
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: db-config-secret-9mttb5gth7
+        - name: NAME
+          valueFrom:
+            secretKeyRef:
+              key: name
+              name: db-config-secret-9mttb5gth7
+        - name: TYPE
+          valueFrom:
+            configMapKeyRef:
+              key: type
+              name: db-configmap-224ccm95kc
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              key: host
+              name: db-configmap-224ccm95kc
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              key: port
+              name: db-configmap-224ccm95kc
+        image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/json-storage:latest
+        name: json-storage
+        resources: {}
+      imagePullSecrets:
+      - name: artifactory-secret-6t24dbtd2h
+status: {}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubsubplus-openshift-dev
+    helm.sh/chart: pubsubplus-openshift-dev-3.1.0
+  name: release-name-pubsubplus-openshift-dev
+  namespace: gitops-kustomize
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/name: pubsubplus-openshift-dev
+  serviceName: release-name-pubsubplus-openshift-dev-discovery
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/name: pubsubplus-openshift-dev
+    spec:
+      containers:
+      - command:
+        - bash
+        - -ec
+        - |
+          source /mnt/disks/solace/init.sh
+          # not using postinstall hooks because of order dependencies
+          # launch config check - readiness check script will be launched by readinessProbe
+          nohup /mnt/disks/solace/startup-broker.sh &
+          /usr/sbin/boot.sh
+        env:
+        - name: STATEFULSET_NAME
+          value: release-name-pubsubplus-openshift-dev
+        - name: STATEFULSET_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: TZ
+          value: :/usr/share/zoneinfo/UTC
+        - name: UMASK
+          value: "0022"
+        image: registry.connect.redhat.com/solace/pubsubplus-standard:latest
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - bash
+              - -ec
+              - "while ! pgrep solacedaemon ; do sleep 1; done\nkillall solacedaemon;
+                \nwhile [ ! -d /usr/sw/var/db.upgrade ]; do sleep 1; done;\n"
+        livenessProbe:
+          initialDelaySeconds: 300
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 5
+        name: pubsubplus
+        ports:
+        - containerPort: 2222
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 1943
+          protocol: TCP
+        - containerPort: 55555
+          protocol: TCP
+        - containerPort: 55003
+          protocol: TCP
+        - containerPort: 55443
+          protocol: TCP
+        - containerPort: 55556
+          protocol: TCP
+        - containerPort: 8008
+          protocol: TCP
+        - containerPort: 1443
+          protocol: TCP
+        - containerPort: 9000
+          protocol: TCP
+        - containerPort: 9443
+          protocol: TCP
+        - containerPort: 5672
+          protocol: TCP
+        - containerPort: 5671
+          protocol: TCP
+        - containerPort: 1883
+          protocol: TCP
+        - containerPort: 8883
+          protocol: TCP
+        - containerPort: 8000
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /mnt/disks/solace/readiness_check.sh
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: "2"
+            memory: 3410Mi
+          requests:
+            cpu: "1"
+            memory: 3410Mi
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /etc/podinfo
+          name: podinfo
+        - mountPath: /mnt/disks/solace
+          name: config-map
+        - mountPath: /mnt/disks/secrets
+          name: secrets
+          readOnly: true
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /usr/sw/jail
+          name: data
+          subPath: jail
+        - mountPath: /usr/sw/var
+          name: data
+          subPath: var
+        - mountPath: /usr/sw/internalSpool
+          name: data
+          subPath: internalSpool
+        - mountPath: /usr/sw/adb
+          name: data
+          subPath: adb
+        - mountPath: /var/lib/solace/diags
+          name: data
+          subPath: diags
+        - mountPath: /usr/sw/internalSpool/softAdb
+          name: data
+          subPath: softAdb
+      serviceAccountName: release-name-pubsubplus-openshift-dev-sa
+      terminationGracePeriodSeconds: 1200
+      volumes:
+      - downwardAPI:
+          items:
+          - fieldRef:
+              fieldPath: metadata.labels
+            path: labels
+        name: podinfo
+      - configMap:
+          defaultMode: 493
+          name: release-name-pubsubplus-openshift-dev
+        name: config-map
+      - name: secrets
+        secret:
+          defaultMode: 256
+          secretName: release-name-pubsubplus-openshift-dev-secrets
+      - emptyDir:
+          medium: Memory
+        name: dshm
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  name: event-broker-sink
+  namespace: gitops-kustomize
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  to:
+    kind: ""
+    name: event-broker-sink
+    weight: null
+status: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  name: event-broker-source
+  namespace: gitops-kustomize
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  to:
+    kind: ""
+    name: event-broker-source
+    weight: null
+status: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  name: json-storage
+  namespace: gitops-kustomize
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  to:
+    kind: ""
+    name: json-storage
+    weight: null
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    helm.sh/hook: test
+  labels:
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubsubplus-openshift-dev
+    helm.sh/chart: pubsubplus-openshift-dev-3.1.0
+  name: release-name-pubsubplus-openshift-dev-test
+  namespace: gitops-kustomize
+spec:
+  containers:
+  - command:
+    - /bin/bash
+    - -c
+    - |
+      # Get tcp-semp port out of PORT_MAPPINGS
+      portmappings_array=(`awk -F']' '{ for(i=1;i<=NF;i++) print $i }' <<< $PORT_MAPPINGS | grep "tcp-semp"`)
+      for i in ${portmappings_array[@]}; do if [[ "$i" == *"servicePort"* ]]; then SEMP_PORT="$(cut -d':' -f2 <<<$i)"; fi ; done
+      echo "SEMP port: $SEMP_PORT"
+      echo "Checking for successful SEMP access"
+      if curl --write-out '%{http_code}' -u admin:$SOLACE_PASSWORD $SOLACE_HOST:$SEMP_PORT/SEMP | grep 200
+        then echo "SEMP access successful"
+        else echo "SEMP access failed"; exit 1
+      fi
+      exit 0
+    env:
+    - name: SOLACE_HOST
+      value: release-name-pubsubplus-openshift-dev
+    - name: SOLACE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: username_admin_password
+          name: release-name-pubsubplus-openshift-dev-secrets
+    - name: PORT_MAPPINGS
+      value: '[map[containerPort:2222 name:tcp-ssh protocol:TCP servicePort:2222]
+        map[containerPort:8080 name:tcp-semp protocol:TCP servicePort:8080] map[containerPort:1943
+        name:tls-semp protocol:TCP servicePort:1943] map[containerPort:55555 name:tcp-smf
+        protocol:TCP servicePort:55555] map[containerPort:55003 name:tcp-smfcomp protocol:TCP
+        servicePort:55003] map[containerPort:55443 name:tls-smf protocol:TCP servicePort:55443]
+        map[containerPort:55556 name:tcp-smfroute protocol:TCP servicePort:55556]
+        map[containerPort:8008 name:tcp-web protocol:TCP servicePort:8008] map[containerPort:1443
+        name:tls-web protocol:TCP servicePort:1443] map[containerPort:9000 name:tcp-rest
+        protocol:TCP servicePort:9000] map[containerPort:9443 name:tls-rest protocol:TCP
+        servicePort:9443] map[containerPort:5672 name:tcp-amqp protocol:TCP servicePort:5672]
+        map[containerPort:5671 name:tls-amqp protocol:TCP servicePort:5671] map[containerPort:1883
+        name:tcp-mqtt protocol:TCP servicePort:1883] map[containerPort:8883 name:tls-mqtt
+        protocol:TCP servicePort:8883] map[containerPort:8000 name:tcp-mqttweb protocol:TCP
+        servicePort:8000] map[containerPort:8443 name:tls-mqttweb protocol:TCP servicePort:8443]]'
+    image: registry.connect.redhat.com/solace/pubsubplus-standard:latest
+    imagePullPolicy: IfNotPresent
+    name: release-name-pubsubplus-openshift-dev-test
+  restartPolicy: Never
