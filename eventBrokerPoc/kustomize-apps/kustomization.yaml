@@ -5,6 +5,7 @@ bases:
 - ./eventBrokerSource
 - ./jsonStorage
 - ./eventBrokerSink
+- ./postgres
 # Create artifactory pull secret
 secretGenerator:
   - name: artifactory-secret
@@ -14,7 +15,7 @@ secretGenerator:
 configMapGenerator:
 - name: solace-config
   literals:
-  - host=pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
+  - host=release-name-pubsubplus-openshift-dev.gitops-kustomize.svc.cluster.local
   - username=test
   - topic=test/topic
 
