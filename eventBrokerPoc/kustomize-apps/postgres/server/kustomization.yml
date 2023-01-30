@@ -21,12 +21,6 @@ configMapGenerator:
         app.kubernetes.io/component: server
     literals:
       - POSTGRES_DB=eventdb
-      # - POSTGRES_GENERAL_DATABASE=postgresdb
-#      - POSTGRES_ADMIN=postgres
-#      - POSTGRES_PASSWORD=admin
-#      - POSTGRES_GENERAL_USERNAME=kaylaa
-#      - POSTGRES_GENERAL_PASSWORD=passwd
-
 secretGenerator:
   - name: postgres-creds
     options:
