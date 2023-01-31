@@ -5,6 +5,6 @@
 replicaCount: 1
 
 solaceEventBroker:
-  host: pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
+  host: solace-pubsubplus-openshift-dev.gitops-helm.svc.cluster.local
   username: test
   topic: test/topic
