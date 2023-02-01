@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+      - name: artifactory-secret
+      containers:
+      - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/json-storage:latest
+        name: {{ .Release.Name }}
+        env:
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-secret
+                  key: user
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-secret
+                  key: password
+            - name: NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-secret
+                  key: name
+            - name: TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configmap
+                  key: type
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configmap
+                  key: host
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configmap
+                  key: port
+        resources: {}
+status: {}
