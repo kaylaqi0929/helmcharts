@@ -1,0 +1,13 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  port:
+    targetPort: {{ .Values.route.targetPort }}
+  tls:
+    termination: {{ .Values.route.termination }}
+  to:
+    kind: {{ .Values.route.kind }}
+    name: {{ .Release.Name }}
+    weight: {{ .Values.route.weight }}
