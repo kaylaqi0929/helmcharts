@@ -5,7 +5,6 @@ metadata:
   labels:
     app: json-storage
   name: json-storage
-  namespace: gitops-kustomize
 spec:
   replicas: 1
   selector:

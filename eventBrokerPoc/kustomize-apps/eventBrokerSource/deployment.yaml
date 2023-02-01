@@ -5,7 +5,7 @@ metadata:
   labels:
     app: event-broker-source
   name: event-broker-source
-  namespace: gitops-kustomize
+
 spec:
   replicas: 1
   selector:
