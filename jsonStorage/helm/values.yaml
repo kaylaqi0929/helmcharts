@@ -30,10 +30,11 @@ dbConfigSecret:
   user: yuriy
   name: eventdb
   password: 1234
-
-dbConfig:
-#  host: pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
-#  host: solace-pubsubplus-openshift-dev  
   host: postgres-server
   type: jdbc:postgresql
   port: 5432
+
+#dbConfig: 
+#  host: postgres-server
+#  type: jdbc:postgresql
+#  port: 5432

@@ -6,10 +6,7 @@ data:
   user: {{ .Values.dbConfigSecret.user | quote }}
   name: {{ .Values.dbConfigSecret.name | quote }}
   password: {{ .Values.dbConfigSecret.password | quote }}
----
-metadata:
-  name: db-configmap
-data:
-  host: {{ .Values.dbConfig.host | quote }}
-  type: {{ .Values.dbConfig.type | quote }}
-  port: {{ .Values.dbConfig.port | quote }} 
+# db config
+  host: {{ .Values.dbConfigSecret.host | quote }}
+  type: {{ .Values.dbConfigSecret.type | quote }}
+  port: {{ .Values.dbConfigSecret.port | quote }} 

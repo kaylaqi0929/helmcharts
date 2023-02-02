@@ -39,17 +39,17 @@ spec:
             - name: TYPE
               valueFrom:
                 configMapKeyRef:
-                  name: db-configmap
+                  name: db-config-secret
                   key: type
             - name: HOST
               valueFrom:
                 configMapKeyRef:
-                  name: db-configmap
+                  name: db-config-secret
                   key: host
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: db-configmap
+                  name: db-config-secret
                   key: port
         resources: {}
 status: {}
