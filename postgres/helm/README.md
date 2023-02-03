@@ -4,6 +4,11 @@ Install using:
 $ helm install postgres . 
 ```
 
+DEPENDENCY:
+To update dependency:
+```
+$ helm dependency update
+```
 
 
 
