@@ -18,6 +18,7 @@ imagePullSecrets: artifactory-secret
 service:
   type: ClusterIP
   port: 8080
+  name: 8080-tcp
 
 route:
   targetPort: 8080-tcp
