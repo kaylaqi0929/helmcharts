@@ -4,7 +4,7 @@ serviceAccount:
   name: postgres-gitops-helm-deployment-admin
 postgres:
   name: helm-postgres
-  namespace: gitops-helm
+  namespace: danialtesting
   group: db
   container:
     image: postgres:15.1-alpine

@@ -1,7 +1,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Values.name }}
 spec:
   port:
     targetPort: 8080-tcp
@@ -9,6 +9,6 @@ spec:
     termination: edge
   to:
     kind: ""
-    name: {{ .Release.Name }}
+    name: {{ .Values.name }}
     weight: null
 status: {}
