@@ -16,40 +16,45 @@ spec:
         app: {{ .Release.Name }}
     spec:
       imagePullSecrets:
-      - name: artifactory-secret
+      - name: {{ .Values.imagePullSecrets }}
       containers:
-      - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/json-storage:latest
-        name: {{ .Release.Name }}
-        env:
-            - name: USER
-              valueFrom:
-                secretKeyRef:
-                  name: db-config-secret
-                  key: user
-            - name: PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-config-secret
-                  key: password
-            - name: NAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-config-secret
-                  key: name
-            - name: TYPE
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config-secret
-                  key: type
-            - name: HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config-secret
-                  key: host
-            - name: PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config-secret
-                  key: port
-        resources: {}
-status: {}
+        - name: {{ .Release.Name }}
+          image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/json-storage:latest
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+          - name: USER
+            valueFrom:
+              secretKeyRef:
+                name: db-config-secret
+                key: user
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-config-secret
+                key: password
+          - name: NAME
+            valueFrom:
+              secretKeyRef:
+                name: db-config-secret
+                key: name
+          - name: TYPE
+            valueFrom:
+              configMapKeyRef:
+                name: db-configmap
+                key: type
+          - name: HOST
+            valueFrom:
+              configMapKeyRef:
+                name: db-configmap
+                key: host
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: db-configmap
+                key: port
+          resources: {}
+

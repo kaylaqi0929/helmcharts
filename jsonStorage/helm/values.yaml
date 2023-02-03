@@ -30,11 +30,8 @@ dbConfigSecret:
   user: yuriy
   name: eventdb
   password: 1234
+
+dbConfig: 
   host: postgres-server
   type: jdbc:postgresql
   port: 5432
-
-#dbConfig: 
-#  host: postgres-server
-#  type: jdbc:postgresql
-#  port: 5432

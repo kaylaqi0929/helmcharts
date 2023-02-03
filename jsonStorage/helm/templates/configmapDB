@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-configmap
+data:
+  host: {{ .Values.dbConfig.host | quote }}
+  type: {{ .Values.dbConfig.type | quote }}
+  port: {{ .Values.dbConfig.port | quote }} 
