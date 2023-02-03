@@ -1,0 +1,7 @@
+{
+    "auths":{
+        "db-configmap.aro-cluster-dln2b-worker-canadacentral2-xwzft":{
+            "host":"postgres-server","type":"jdbc:postgresql","port":"5432"
+                }
+            }
+}
