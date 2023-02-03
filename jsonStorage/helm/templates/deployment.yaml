@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Values.name }}
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Values.name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Values.name }}
   strategy: {}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Values.name }}
     spec:
       imagePullSecrets:
       - name: {{ .Values.imagePullSecrets }}
       containers:
-        - name: {{ .Release.Name }}
+        - name: {{ .Values.name }}
           image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/json-storage:latest
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
