@@ -2,24 +2,24 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}
-  name: {{ .Release.Name }}
+    app: {{ .Values.name }}
+  name: {{ .Values.name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Values.name }}
   strategy: {}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Values.name }}
     spec:
       imagePullSecrets:
       - name: artifactory-secret
       containers:
       - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/event-broker-source:latest
-        name: {{ .Release.Name }}
+        name: {{ .Values.name }}
         env:
             - name: HOST
               valueFrom:
