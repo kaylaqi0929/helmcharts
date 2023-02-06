@@ -3,12 +3,12 @@ entries:
   eventBrokerSink:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-02-06T18:40:49.3217796Z"
+    created: "2023-02-06T18:44:58.5498253Z"
     description: A Helm chart for deploying the EventBrokerSink Application.
-    digest: 8ecf70e1688d51b2536ee06edaf624d22343474e4edf4027cf3aa952bf575f81
+    digest: 2c80d0cf52a7543f7ad51a4c8b4624f826925cf5388fb23d23eb6418664a11ed
     name: eventBrokerSink
     type: application
     urls:
     - eventBrokerSink-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-06T18:40:49.3211615Z"
+generated: "2023-02-06T18:44:58.5487494Z"
