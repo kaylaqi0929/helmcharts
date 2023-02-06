@@ -10,3 +10,9 @@ solaceEventBroker:
   host: solace-pubsubplus-openshift-dev
   username: test
   topic: test/topic
+
+configmap:
+  enabled: false
+
+artifactorySecret:
+  enabled: false

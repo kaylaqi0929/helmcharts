@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: solace-config
-data:
-  host: {{ .Values.solace.host | quote }}
-  username: {{ .Values.solace.username | quote }}
-  topic: {{ .Values.solace.topic | quote }}

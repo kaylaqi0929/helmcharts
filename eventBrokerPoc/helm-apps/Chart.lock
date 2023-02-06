@@ -1,0 +1,12 @@
+dependencies:
+- name: eventBrokerSource
+  repository: https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/eventBrokerSource/helm/package
+  version: 0.1.0
+- name: eventBrokerSink
+  repository: https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/eventBrokerSink/helm/package
+  version: 0.1.0
+- name: pubsubplus-openshift-dev
+  repository: https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/solace/helm
+  version: 3.1.0
+digest: sha256:38c61ea11c226560f42dc1bec7c6bd1f79f1ca409eeb66f870a8bcc4ae738328
+generated: "2023-02-06T21:58:10.689244Z"

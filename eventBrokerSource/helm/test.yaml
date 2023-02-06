@@ -1,0 +1,101 @@
+NAME: source
+LAST DEPLOYED: Mon Feb  6 18:21:38 2023
+NAMESPACE: hel-test
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+USER-SUPPLIED VALUES:
+{}
+
+COMPUTED VALUES:
+artifactorySecret:
+  enabled: false
+configmap:
+  enabled: false
+name: event-broker-source
+replicaCount: 1
+solaceEventBroker:
+  host: solace-pubsubplus-openshift-dev
+  topic: test/topic
+  username: test
+
+HOOKS:
+MANIFEST:
+---
+# Source: eventBrokerSource/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: event-broker-source
+  name: event-broker-source
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: event-broker-source
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+# Source: eventBrokerSource/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: event-broker-source
+  name: event-broker-source
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-broker-source
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: event-broker-source
+    spec:
+      imagePullSecrets:
+      - name: artifactory-secret
+      containers:
+      - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/event-broker-source:latest
+        name: event-broker-source
+        env:
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: host
+            - name: USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: username
+            - name: TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: topic
+        resources: {}
+status: {}
+---
+# Source: eventBrokerSource/templates/route.yaml
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: event-broker-source
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  to:
+    kind: ""
+    name: event-broker-source
+    weight: null
+status: {}
+

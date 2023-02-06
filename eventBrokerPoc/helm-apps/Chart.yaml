@@ -7,10 +7,11 @@ appVersion: "1.0.0"
 dependencies:
   - name: eventBrokerSource
     version: ~0.1.0
-    repository: "https://github.com/danialasghar/GitOps-PoC/tree/main/eventBrokerSource/helm"
+    repository: "https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/eventBrokerSource/helm/package"
   - name: eventBrokerSink
     version: ~0.1.0
-    repository: "https://github.com/danialasghar/GitOps-PoC/tree/main/eventBrokerSink/helm"
+    repository: "https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/eventBrokerSink/helm/package"
   - name: pubsubplus-openshift-dev
     version: ~3.1.0
-    repository: "https://artifacthub.io/packages/helm/openshift/pubsubplus-openshift-dev"
+    repository: "https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/solace/helm"
+
