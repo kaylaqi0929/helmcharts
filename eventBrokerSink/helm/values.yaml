@@ -32,3 +32,6 @@ solace:
   host: pubsubplus-openshift-cris-pubsubplus-openshift.gitops-kustomize.svc.cluster.local
   username: test
   topic: test/topic
+
+storage:
+  url: http://json-storage:8080
