@@ -1,0 +1,16 @@
+apiVersion: v2
+name: event-broker-poc
+description: A Parent Helm chart to deploy event-broker-poc's components 
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: eventBrokerSource
+    version: ~0.1.0
+    repository: "https://github.com/danialasghar/GitOps-PoC/tree/main/eventBrokerSource/helm"
+  - name: eventBrokerSink
+    version: ~0.1.0
+    repository: "https://github.com/danialasghar/GitOps-PoC/tree/main/eventBrokerSink/helm"
+  - name: pubsubplus-openshift-dev
+    version: ~3.1.0
+    repository: "https://artifacthub.io/packages/helm/openshift/pubsubplus-openshift-dev"

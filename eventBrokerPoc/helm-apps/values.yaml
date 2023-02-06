@@ -1,0 +1,10 @@
+# # Default values for eventBrokerSource.
+# # This is a YAML-formatted file.
+# # Declare variables to be passed into your templates.
+
+# replicaCount: 1
+
+solace:
+  host: solace-pubsubplus-openshift-dev
+  username: test
+  topic: test/topic
