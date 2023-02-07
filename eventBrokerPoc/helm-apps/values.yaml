@@ -1,8 +1,17 @@
 eventBrokerSource:
   configmap: 
     enabled: false
-  artifactory-secret: 
+  artifactorysecret: 
     enabled: false
+  solace:
+    host: poc-pubsubplus-openshift-dev
 
 jsonStorage:
-  artifactory-secret: false
+  artifactorysecret: 
+    enabled: false
+  dbConfig:
+    host: poc-postgresql
+
+eventBrokerSink:
+  solace:
+    host: poc-pubsubplus-openshift-dev
