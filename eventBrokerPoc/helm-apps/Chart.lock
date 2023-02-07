@@ -5,8 +5,11 @@ dependencies:
 - name: eventBrokerSink
   repository: https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/eventBrokerSink/helm/package
   version: 0.1.0
+- name: jsonStorage
+  repository: https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/jsonStorage/helm/package
+  version: 0.1.0
 - name: pubsubplus-openshift-dev
   repository: https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/solace/helm
   version: 3.1.0
-digest: sha256:38c61ea11c226560f42dc1bec7c6bd1f79f1ca409eeb66f870a8bcc4ae738328
-generated: "2023-02-06T21:58:10.689244Z"
+digest: sha256:6ecf939af58bde8ec726856e8ee8040818a55b159f5804a5bf8628eb706c9f85
+generated: "2023-02-07T15:08:03.9959261Z"

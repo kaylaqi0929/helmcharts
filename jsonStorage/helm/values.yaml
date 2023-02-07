@@ -38,3 +38,6 @@ dbConfig:
   host: postgres-server
   type: jdbc:postgresql
   port: 5432
+
+artifactory-secret:
+  enabled: true

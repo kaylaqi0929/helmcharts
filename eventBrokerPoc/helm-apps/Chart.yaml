@@ -11,8 +11,11 @@ dependencies:
   - name: eventBrokerSink
     version: ~0.1.0
     repository: "https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/eventBrokerSink/helm/package"
+  - name: jsonStorage
+    version: ~0.1.0
+    repository: "https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/jsonStorage/helm/package"
   - name: pubsubplus-openshift-dev
     version: ~3.1.0
     repository: "https://raw.githubusercontent.com/danialasghar/GitOps-PoC/main/solace/helm"
-  - name: postgresql
+  # - name: postgresql
 

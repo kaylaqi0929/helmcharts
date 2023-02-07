@@ -12,7 +12,7 @@ solaceEventBroker:
   topic: test/topic
 
 configmap:
-  enabled: false
+  enabled: true
 
 artifactorySecret:
-  enabled: false
+  enabled: true

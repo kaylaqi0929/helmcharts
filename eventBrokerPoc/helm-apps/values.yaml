@@ -1,5 +1,8 @@
-# eventBrokerSource:
-#   configmap: 
-#     enabled: false
-#   artifactory-secret: 
-#     enabled: false
+eventBrokerSource:
+  configmap: 
+    enabled: false
+  artifactory-secret: 
+    enabled: false
+
+jsonStorage:
+  artifactory-secret: false
