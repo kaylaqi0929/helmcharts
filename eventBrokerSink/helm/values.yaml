@@ -6,11 +6,7 @@ name: event-broker-sink
 
 replicaCount: 1
 
-image:
-  repository: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/eventbrokersink
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/eventbrokersink:latest
 
 imagePullSecrets: artifactory-secret
 
@@ -35,3 +31,9 @@ solace:
 
 storage:
   url: http://json-storage:8080
+
+artifactorySecret:
+  enabled: true
+
+configmap:
+  enabled: true
