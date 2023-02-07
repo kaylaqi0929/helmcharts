@@ -454,7 +454,7 @@ primary:
   ##
   podSecurityContext:
     enabled: false
-    fsGroup: 1000780000
+    fsGroup: 1000860000
   ## Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ## @param primary.containerSecurityContext.enabled Enable container security context
@@ -462,7 +462,7 @@ primary:
   ##
   containerSecurityContext:
     enabled: false
-    runAsUser: 1000780000
+    runAsUser: 1000860000
   ## @param primary.hostAliases PostgreSQL primary pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
