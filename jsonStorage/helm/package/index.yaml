@@ -3,12 +3,12 @@ entries:
   jsonStorage:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-02-07T17:16:45.0685219Z"
+    created: "2023-02-07T20:23:24.5204649Z"
     description: A Helm chart for deploying the jsonStorage Application
-    digest: fd492bdee7006d3ba51ea2be5845cdca0ef94a90b247527f1bb46e184715ee45
+    digest: ee84e24c2be462ce59f45faf43b5b5d1160444b83ac49525873cffd3b131721e
     name: jsonStorage
     type: application
     urls:
     - jsonStorage-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-07T17:16:45.0685219Z"
+generated: "2023-02-07T20:23:24.5194651Z"

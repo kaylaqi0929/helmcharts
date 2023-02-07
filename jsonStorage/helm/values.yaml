@@ -35,7 +35,7 @@ dbConfigSecret:
   password: 1234
 
 dbConfig: 
-  host: postgres-server
+  host: json-storage
   type: jdbc:postgresql
   port: 5432
 
