@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.name }}
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      imagePullSecrets:
+      - name: artifactory-secret
+      containers:
+      - image: artifactory-artifactory.apps.xnkpeyx0.canadacentral.aroapp.io/gitops-local/event-broker-source:latest
+        name: {{ .Values.name }}
+        env:
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: host
+            - name: USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: username
+            - name: TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: solace-config
+                  key: topic
+        resources: {}
+status: {}

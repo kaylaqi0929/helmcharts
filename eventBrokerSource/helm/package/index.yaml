@@ -3,12 +3,12 @@ entries:
   eventBrokerSource:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-02-07T15:27:30.7344441Z"
+    created: "2023-02-07T17:19:33.0744759Z"
     description: A Helm chart for Kubernetes
-    digest: 0cf42fbf26caaba1d47824e6578f3a408c33472d66de7e92ff2263767a937e65
+    digest: 4edc14415ba48871b58e4c9b3f6f1d425632af904bc04cbf2a4a75684a846e4a
     name: eventBrokerSource
     type: application
     urls:
     - eventBrokerSource-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-07T15:27:30.7334436Z"
+generated: "2023-02-07T17:19:33.0744759Z"

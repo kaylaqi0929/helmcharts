@@ -14,5 +14,5 @@ solaceEventBroker:
 configmap:
   enabled: true
 
-artifactorySecret:
+artifactorysecret:
   enabled: true
