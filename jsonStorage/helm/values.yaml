@@ -39,5 +39,5 @@ dbConfig:
   type: jdbc:postgresql
   port: 5432
 
-artifactory-secret:
+artifactorySecret:
   enabled: true
