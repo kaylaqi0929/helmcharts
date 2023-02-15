@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pubsubplus-openshift-dev
+  namespace: openshift-gitops
+spec:
+  destination:
+    name: ''
+    namespace: argocd3
+    server: 'https://kubernetes.default.svc'
+  source:
+    chart: pubsubplus-openshift-dev
+    repoURL: https://artifacthub.io/packages/helm/openshift/pubsubplus-openshift-dev
+    targetRevision: 3.1.0
+  project: default
