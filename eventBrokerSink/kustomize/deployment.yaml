@@ -39,5 +39,10 @@ spec:
                 configMapKeyRef:
                   name: solace-config
                   key: topic
+            - name: URL
+              valueFrom:
+                configMapKeyRef:
+                  name: storage-service-config
+                  key: url
         resources: {}
 status: {}
