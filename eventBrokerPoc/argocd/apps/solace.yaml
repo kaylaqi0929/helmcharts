@@ -11,5 +11,5 @@ spec:
   source:
     chart: pubsubplus-openshift-dev
     repoURL: https://charts.openshift.io
-    targetRevision: 3.1.0
+    # targetRevision: 3.1.0
   project: default
