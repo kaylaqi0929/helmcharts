@@ -5,7 +5,7 @@ metadata:
   labels:
     app: event-broker-sink
   name: event-broker-sink
-  namespace: gitops-kustomize
+  # namespace: gitops-kustomize
 spec:
   ports:
   - name: 8080-tcp
