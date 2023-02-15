@@ -9,7 +9,7 @@ spec:
     namespace: argocd3
     server: 'https://kubernetes.default.svc'
   source:
-    path: jsonStorage
+    path: jsonStorage/kustomize
     repoURL: 'https://github.com/danialasghar/GitOps-PoC'
     targetRevision: main
   project: default

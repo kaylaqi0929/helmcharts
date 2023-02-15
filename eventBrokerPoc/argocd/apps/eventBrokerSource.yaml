@@ -9,7 +9,7 @@ spec:
     namespace: argocd3
     server: 'https://kubernetes.default.svc'
   source:
-    path: eventBrokerSource
+    path: eventBrokerSource/kustomize
     repoURL: 'https://github.com/danialasghar/GitOps-PoC.git'
     targetRevision: main
   project: default
