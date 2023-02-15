@@ -6,7 +6,7 @@ resources:
   - serviceaccount.yml
   - role.yml
   - rolebinding.yml
-  - job.yml
+  # - job.yml
 
 configMapGenerator:
   - name: postgres-gitops-kustomize-deployment-admin
@@ -14,8 +14,8 @@ configMapGenerator:
       labels:
         app.kubernetes.io/name: postgres
         app.kubernetes.io/component: passwd
-    files:
-      - configs/playbook.yml
+    # files:
+    #   - configs/playbook.yml
     literals:
       - username=example
 
