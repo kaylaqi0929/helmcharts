@@ -10,6 +10,6 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     chart: pubsubplus-openshift-dev
-    repoURL: https://charts.openshift.io/index.yaml
+    repoURL: https://charts.openshift.io
     targetRevision: 3.1.0
   project: default
