@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: json-storage
+  namespace: openshift-gitops
+spec:
+  destination:
+    name: ''
+    namespace: argocd3
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: jsonStorage
+    repoURL: 'https://github.com/danialasghar/GitOps-PoC'
+    targetRevision: main
+  project: default

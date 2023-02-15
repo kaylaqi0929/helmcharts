@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: event-broker-poc-kustomize
+spec:
+  destination:
+    name: ''
+    namespace: argocd-kustomize
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: eventBrokerPoc/kustomize-apps/
+    repoURL: 'https://github.com/danialasghar/GitOps-PoC.git'
+    targetRevision: main
+  project: default
+
+
+
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: even-broker-poc-kustomize2
+spec:
+  destination:
+    name: ''
+    namespace: argocd3
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: eventBrokerPoc/kustomize-apps
+    repoURL: 'https://github.com/danialasghar/GitOps-PoC.git'
+    targetRevision: main
+  project: default
