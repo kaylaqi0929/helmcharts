@@ -6,6 +6,7 @@ bases:
 - ./jsonStorage
 - ./eventBrokerSink
 - ./postgres
+- all.yaml
 # Create artifactory pull secret
 secretGenerator:
   - name: artifactory-secret
