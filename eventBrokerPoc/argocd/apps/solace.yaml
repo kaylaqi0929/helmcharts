@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     name: ''
-    namespace: argocd3
+    namespace: argocd-apps
     server: 'https://kubernetes.default.svc'
   source:
     path: solace/helm/pubsubplus-openshift-dev

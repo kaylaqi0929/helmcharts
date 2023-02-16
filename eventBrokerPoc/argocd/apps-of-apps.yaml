@@ -1,14 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: event-broker-kustomize-argocd
+  name: event-broker-apps-argocd
   namespace: openshift-gitops
 spec:
   destination:
-    namespace: argocd-test
+    namespace: argocd-apps
     server: 'https://kubernetes.default.svc'
   source:
-    path: eventBrokerPoc/kustomize-apps
+    path: eventBrokerPoc/argocd/apps
     repoURL: 'https://github.com/danialasghar/GitOps-PoC.git'
     targetRevision: main
   project: default
+
