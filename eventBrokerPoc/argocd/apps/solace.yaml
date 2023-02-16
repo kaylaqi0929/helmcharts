@@ -9,7 +9,9 @@ spec:
     namespace: argocd3
     server: 'https://kubernetes.default.svc'
   source:
-    path: pubsubplus-kubernetes-quickstart/pubsubplus
+    path: pubsubplus
     repoURL: https://github.com/SolaceProducts/pubsubplus-kubernetes-quickstart.git
     targetRevision: master
   project: default
+
+
