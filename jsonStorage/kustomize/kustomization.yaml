@@ -26,6 +26,6 @@ secretGenerator:
 configMapGenerator:
 - name: db-configmap
   literals:
-  - host=postgres-serve
+  - host=postgres-server
   - type=jdbc:postgresql
   - port=5432
