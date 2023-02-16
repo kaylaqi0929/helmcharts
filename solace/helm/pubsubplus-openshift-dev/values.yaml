@@ -5,7 +5,7 @@
 # nameOverride:
 
 # If defined "fullnameOverride" will fully override Kubernetes object names
-# fullnameOverride:
+fullnameOverride: "pubsubplus-openshift-dev"
 
 solace:
   # solace.redundancy=false will create a single-node non-HA deployment;
