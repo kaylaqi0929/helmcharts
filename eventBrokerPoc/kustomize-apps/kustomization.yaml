@@ -15,7 +15,7 @@ secretGenerator:
 configMapGenerator:
 - name: solace-config
   literals:
-  - host=release-name-pubsubplus-openshift-dev.gitops-kustomize.svc.cluster.local
+  - host=solace-pubsubplus-openshift-dev
   - username=test
   - topic=test/topic
 
@@ -23,5 +23,6 @@ helmChartInflationGenerator:
 - chartName: pubsubplus-openshift-dev
   chartRepoUrl: https://artifacthub.io/packages/helm/openshift/pubsubplus-openshift-dev
   chartVersion: 3.1.0
+  releaseName: solace
   # override with these custom values
   # values: ./values-aro.yaml
