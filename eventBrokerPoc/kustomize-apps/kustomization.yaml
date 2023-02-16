@@ -23,6 +23,6 @@ helmChartInflationGenerator:
 - chartName: solace-pubsubplus-openshift-dev
   chartRepoUrl: https://charts.openshift.io/
   chartVersion: 3.1.0
-  releaseName: solace
+  # releaseName: solace
   # override with these custom values
   # values: ./values-aro.yaml
