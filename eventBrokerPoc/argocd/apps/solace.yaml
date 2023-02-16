@@ -9,7 +9,7 @@ spec:
     namespace: argocd3
     server: 'https://kubernetes.default.svc'
   source:
-    chart: pubsubplus-openshift-dev
-    repoURL: https://charts.openshift.io
-    targetRevision: 3.0.0
+    path: solace/helm/pubsubplus-openshift-dev
+    repoURL: https://github.com/danialasghar/GitOps-PoC.git
+    targetRevision: main
   project: default
