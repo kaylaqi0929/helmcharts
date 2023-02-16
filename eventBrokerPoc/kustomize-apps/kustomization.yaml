@@ -20,8 +20,8 @@ configMapGenerator:
   - topic=test/topic
 
 helmChartInflationGenerator:
-- chartName: pubsubplus-openshift-dev
-  chartRepoUrl: https://artifacthub.io/packages/helm/openshift/pubsubplus-openshift-dev
+- chartName: solace-pubsubplus-openshift-dev
+  chartRepoUrl: https://charts.openshift.io/
   chartVersion: 3.1.0
   releaseName: solace
   # override with these custom values
