@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: event-broker-poc-argocd-helm
 spec:
-  project: argocd
+  project: default
   source:
     path: eventBrokerPoc/helm-apps/
     repoURL: 'https://github.com/danialasghar/GitOps-PoC.git'
