@@ -12,6 +12,8 @@ spec:
     path: solace/helm/pubsubplus-openshift-dev
     repoURL: https://github.com/danialasghar/GitOps-PoC.git
     targetRevision: main
+    helm:
+      releaseName: solace
   project: default
 
 
