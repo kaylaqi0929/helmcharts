@@ -3,13 +3,13 @@ entries:
   jsonStorage:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-02-17T15:29:09.9375629Z"
+    created: "2023-02-17T15:40:08.8481073Z"
     description: A Helm chart for deploying the jsonStorage Application
     digest: f436497f239992ff80ab208f722a3ff4bc025eb0c44ba083e8eb680ffb6a9b7e
     name: jsonStorage
     type: application
     urls:
-    - https://github.com/kaylaqi0929/helmcharts/jsonStorage-0.1.0.tgz
+    - https://kaylaqi0929.github.io/helmcharts/jsonStorage-0.1.0.tgz
     version: 0.1.0
   postgresql:
   - annotations:
@@ -17,7 +17,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 15.1.0
-    created: "2023-02-17T15:29:09.947725Z"
+    created: "2023-02-17T15:40:08.8642276Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -45,6 +45,6 @@ entries:
     - https://github.com/bitnami/containers/tree/main/bitnami/postgresql
     - https://www.postgresql.org/
     urls:
-    - https://github.com/kaylaqi0929/helmcharts/postgresql-12.1.14.tgz
+    - https://kaylaqi0929.github.io/helmcharts/postgresql-12.1.14.tgz
     version: 12.1.14
-generated: "2023-02-17T15:29:09.936354Z"
+generated: "2023-02-17T15:40:08.8481073Z"
