@@ -1,1 +1,0 @@
-CREATE TABLE records ( id serial NOT NULL PRIMARY KEY, data json NOT NULL );
